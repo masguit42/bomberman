@@ -1,12 +1,16 @@
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
+import path from 'path';
+import fs from 'fs';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import seedrandom from 'seedrandom';
 import { v4 as uuid } from 'uuid';
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 4000;
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN ?? '*';
+const PUBLIC_URL = process.env.PUBLIC_URL;
+const CLIENT_DIST_PATH = process.env.CLIENT_DIST_PATH;
 
 const TILE_SIZE = 48;
 const MAP_WIDTH = 30;
@@ -184,9 +188,24 @@ interface PlayerSnapshot {
 
 const rooms = new Map<string, Room>();
 
+function resolveShareBase(req: express.Request): string {
+  const configured = PUBLIC_URL?.trim();
+  if (configured) {
+    return configured.replace(/\/$/, '');
+  }
+  const host = req.get('host') ?? '';
+  const protocol = req.protocol;
+  return `${protocol}://${host}`.replace(/\/$/, '');
+}
+
 const app = express();
 app.use(cors({ origin: CLIENT_ORIGIN, credentials: true }));
 app.use(express.json());
+
+const resolvedClientDist = CLIENT_DIST_PATH
+  ? path.resolve(CLIENT_DIST_PATH)
+  : path.resolve(__dirname, '../../client/dist');
+const hasClientBundle = fs.existsSync(resolvedClientDist);
 
 const server = http.createServer(app);
 const io = new SocketIOServer(server, {
@@ -212,7 +231,8 @@ app.post('/api/room', (req, res) => {
     rngSeed: Math.floor(Math.random() * 10_000),
   };
   rooms.set(roomId, room);
-  res.json({ roomId, shareUrl: `${req.protocol}://${req.get('host') ?? ''}/?room=${roomId}` });
+  const shareBase = resolveShareBase(req);
+  res.json({ roomId, shareUrl: `${shareBase}/?room=${roomId}` });
 });
 
 app.get('/api/room/:roomId', (req, res) => {
@@ -233,6 +253,23 @@ app.get('/api/room/:roomId', (req, res) => {
     capacity: MAX_PLAYERS,
   });
 });
+
+if (hasClientBundle) {
+  app.use(express.static(resolvedClientDist, { index: false }));
+  const indexFile = path.join(resolvedClientDist, 'index.html');
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/socket.io') || req.method !== 'GET') {
+      return next();
+    }
+    const acceptsHtml = req.accepts('html');
+    if (!acceptsHtml) {
+      return next();
+    }
+    return res.sendFile(indexFile);
+  });
+} else {
+  console.warn(`Client bundle not found at ${resolvedClientDist}. Only API and WebSocket endpoints will be served.`);
+}
 
 io.on('connection', (socket) => {
   socket.on('room:join', ({ roomId, name }: { roomId: string; name?: string }) => {

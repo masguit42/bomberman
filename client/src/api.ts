@@ -1,4 +1,15 @@
-const API_URL = import.meta.env.VITE_SERVER_URL ?? 'http://localhost:4000';
+function resolveBaseUrl(): string {
+  const envUrl = import.meta.env.VITE_SERVER_URL?.trim();
+  if (envUrl) {
+    return envUrl.replace(/\/$/, '');
+  }
+  if (typeof window !== 'undefined') {
+    return window.location.origin.replace(/\/$/, '');
+  }
+  return 'http://localhost:4000';
+}
+
+const API_URL = resolveBaseUrl();
 
 export async function createRoom() {
   const response = await fetch(`${API_URL}/api/room`, {
