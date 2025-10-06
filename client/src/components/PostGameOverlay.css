@@ -1,0 +1,63 @@
+.postgame-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.6);
+  z-index: 80;
+}
+
+.postgame-card {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.98) 0%, rgba(238, 242, 255, 0.98) 100%);
+  border-radius: 28px;
+  padding: 32px;
+  width: min(720px, 90vw);
+  box-shadow: 0 30px 60px rgba(15, 23, 42, 0.35);
+  color: #1e293b;
+}
+
+.postgame-card h2 {
+  margin: 0 0 8px;
+  font-size: 32px;
+  font-family: 'Poppins', 'Nunito', sans-serif;
+}
+
+.postgame-subtitle {
+  margin: 0 0 24px;
+  color: #475569;
+}
+
+.postgame-card table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+}
+
+.postgame-card th,
+.postgame-card td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+.postgame-card tr.alive td {
+  color: #15803d;
+}
+
+.postgame-card tr.dead td {
+  color: #dc2626;
+}
+
+.postgame-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.tooltip {
+  font-size: 14px;
+  color: #475569;
+  margin: 0;
+}

@@ -1,0 +1,123 @@
+.app-shell {
+  min-height: 100vh;
+  background: linear-gradient(140deg, #bfdbfe 0%, #c4b5fd 50%, #fbcfe8 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.landing {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+}
+
+.landing-card {
+  width: min(560px, 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(224, 231, 255, 0.96) 100%);
+  border-radius: 32px;
+  padding: 48px;
+  box-shadow: 0 28px 48px rgba(79, 70, 229, 0.25);
+  text-align: center;
+}
+
+.landing-card h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 48px;
+  margin: 0 0 16px;
+  color: #312e81;
+}
+
+.landing-card p {
+  margin: 0 0 32px;
+  color: #475569;
+  font-size: 18px;
+}
+
+.landing-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.join-form {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.join-form input {
+  flex: 1;
+  max-width: 200px;
+  padding: 12px 16px;
+  border-radius: 20px;
+  border: none;
+  background: #e0e7ff;
+  box-shadow: inset 0 4px 6px rgba(99, 102, 241, 0.2);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+
+.primary {
+  padding: 16px 28px;
+  border-radius: 24px;
+  border: none;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(160deg, #6366f1 0%, #8b5cf6 100%);
+  box-shadow: 0 18px 32px rgba(99, 102, 241, 0.4);
+}
+
+.primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.secondary {
+  padding: 12px 20px;
+  border-radius: 20px;
+  border: none;
+  background: linear-gradient(150deg, #fef3c7 0%, #fcd34d 100%);
+  box-shadow: 0 12px 20px rgba(251, 191, 36, 0.35);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.info-message {
+  margin-top: 16px;
+  color: #4338ca;
+  font-weight: 600;
+}
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 14px 20px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #f8fafc;
+  border-radius: 16px;
+  box-shadow: 0 18px 32px rgba(15, 23, 42, 0.4);
+  font-weight: 600;
+  z-index: 120;
+}
+
+@media (max-width: 640px) {
+  .landing-card {
+    padding: 32px;
+  }
+
+  .join-form {
+    flex-direction: column;
+  }
+
+  .join-form input {
+    max-width: none;
+  }
+}
